@@ -1,68 +1,52 @@
-import os
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    ForeignKey,
-    String,
-    BigInteger,
-    DateTime,
-    func,
-    Date
-)
 from sqlalchemy import orm
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+#
+from app import db
 
-DB_URI = os.getenv("DB_URI", "postgres://postgres:dagger@localhost:5432/postgres")
-engine = create_engine(DB_URI)
-SessionFactory = sessionmaker(bind=engine)
-Session = scoped_session(SessionFactory)
 
-BaseModel = declarative_base()
 
-class Users(BaseModel):
+class Users(db.Model):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    email = Column(String)
-    password = Column(String)
-    passport = Column(String)
-    adress = Column(String)
-    money_amount = Column(Integer)
-    telephone_number = Column(String)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.VARCHAR(1000))
+    password = db.Column(db.VARCHAR(1000))
+    passport = db.Column(db.VARCHAR(1000))
+    adress = db.Column(db.VARCHAR(1000))
+    money_amount = db.Column(db.Integer)
+    telephone_number = db.Column(db.VARCHAR(1000))
 
 
-class Banks(BaseModel):
+
+class Banks(db.Model):
     __tablename__ = "banks"
 
-    id = Column(Integer, primary_key=True)
-    per_cent = Column(Integer)
-    all_money = Column(Integer)    
+    id = db.Column(db.Integer, primary_key=True)
+    per_cent = db.Column(db.Integer)
+    all_money = db.Column(db.Integer)
 
 
-class Credits(BaseModel):
+class Credits(db.Model):
     __tablename__ = "credits"
 
-    id = Column(Integer, primary_key=True)
-    start_date = Column(Date)
-    end_date = Column(Date)
-    start_sum = Column(Integer)
-    current_sum = Column(Integer)
-    user_id = Column(Integer, ForeignKey(Users.id))
-    bank_id = Column(Integer, ForeignKey(Banks.id))
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    start_sum = db.Column(db.Integer)
+    current_sum = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey(Users.id))
+    bank_id = db.Column(db.Integer, db.ForeignKey(Banks.id))
 
     user = orm.relationship('Users', foreign_keys='Credits.user_id')
     bank = orm.relationship('Banks', foreign_keys='Credits.bank_id')
 
 
-class Transactions(BaseModel):
+class Transactions(db.Model):
     __tablename__ = "transactions"
 
-    id = Column(Integer, primary_key=True)
-    date = Column(Date)
-    sum = Column(BigInteger) 
-    credit_id = Column(Integer, ForeignKey(Credits.id))
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    sum = db.Column(db.BigInteger)
+    credit_id = db.Column(db.Integer, db.ForeignKey(Credits.id))
 
     credit = orm.relationship(Credits, backref="transactions", lazy='joined')

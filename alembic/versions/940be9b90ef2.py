@@ -1,16 +1,14 @@
 """add models
-
 Revision ID: 0485a3693a9d
-Revises: 
+Revises:
 Create Date: 2020-11-29 22:49:32.318732
-
 """
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0485a3693a9d'
+revision = '940be9b90ef2'
 down_revision = None
 branch_labels = None
 depends_on = None
