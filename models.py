@@ -18,6 +18,16 @@ class Users(Base):
     telephone_number = Column(VARCHAR(1000))
     super_user = Column(Boolean)
 
+    #def __init__(self, id, email, password, passport, adress, money_amount, telephone_number, super_user):
+     #   self.id=id
+      #  self.email=email
+       # self.password=password
+        #self.passport=passport
+        #self.adress=adress
+        #self.money_amount=money_amount
+        #self.telephone_number = telephone_number
+        #self.super_user=super_user
+
 
 class Banks(Base):
     __tablename__ = "banks"
