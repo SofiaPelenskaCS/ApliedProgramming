@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Users, Banks, Credits, Transactions
+from models import Users, Banks, Credits, Transactions, Base
 from flask import request, jsonify, json, Flask
 from schemas import UserSchema, CreditSchema, TransactionSchema, BankSchema
 import hashlib
@@ -13,6 +13,8 @@ app = Flask(__name__)
 auth = HTTPBasicAuth()
 
 engine = create_engine("postgresql://violetta:123456@localhost:5432/my_database")
+Base.metadata.create_all(engine)
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -56,6 +58,7 @@ def create_user():
     money_amount = request.json.get('money_amount', None)
     telephone_number = request.json.get('telephone_number', None)
     super_user = request.json.get('super_user', False)
+    print(session.query(Users).filter_by(email=email))
     if session.query(Users).filter_by(email=email).first() is None:
         new_user = Users(email=email,
                          password=hashlib.md5(password.encode()).hexdigest(),
@@ -84,7 +87,7 @@ def show_user(id):
 @auth.verify_password
 def verify_password(email, password):
     return session.query(Users).filter_by(email=email,
-                                 password=hashlib.md5(password.encode()).hexdigest()).first() is not None
+                                          password=hashlib.md5(password.encode()).hexdigest()).first() is not None
 
 
 @app.route('/user/<id>/<bankId>/add_credit', methods=['POST'])
@@ -155,6 +158,7 @@ def show_transaction(creditId):
     transactions = session.query(Transactions).filter_by(credit_id=creditId).all()
     if transactions is not None:
         schemas = TransactionSchema(many=True)
+        print(transactions)
         return jsonify(schemas.dump(transactions)), 200
     return jsonify({"msg": "Not Found"}), 404
 
