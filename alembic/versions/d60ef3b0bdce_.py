@@ -1,15 +1,17 @@
-"""add models
-Revision ID: 0485a3693a9d
-Revises:
-Create Date: 2020-11-29 22:49:32.318732
+"""empty message
+
+Revision ID: d60ef3b0bdce
+Revises: 427b5c37a1ab
+Create Date: 2020-12-15 23:02:48.118115
+
 """
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '940be9b90ef2'
-down_revision = None
+revision = 'd60ef3b0bdce'
+down_revision = '427b5c37a1ab'
 branch_labels = None
 depends_on = None
 
@@ -24,12 +26,13 @@ def upgrade():
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('email', sa.String(), nullable=True),
-    sa.Column('password', sa.String(), nullable=True),
-    sa.Column('passport', sa.String(), nullable=True),
-    sa.Column('adress', sa.String(), nullable=True),
+    sa.Column('email', sa.VARCHAR(length=1000), nullable=True),
+    sa.Column('password', sa.VARCHAR(length=1000), nullable=True),
+    sa.Column('passport', sa.VARCHAR(length=1000), nullable=True),
+    sa.Column('adress', sa.VARCHAR(length=1000), nullable=True),
     sa.Column('money_amount', sa.Integer(), nullable=True),
-    sa.Column('telephone_number', sa.String(), nullable=True),
+    sa.Column('telephone_number', sa.VARCHAR(length=1000), nullable=True),
+    sa.Column('super_user', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('credits',
